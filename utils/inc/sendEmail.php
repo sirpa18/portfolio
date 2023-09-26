@@ -16,7 +16,8 @@ if($_POST) {
 		$error['name'] = "Please enter your name.";
 	}
 	// Check Email
-	if (!preg_match('/^[a-z0-9&\'\.\-_\+]+@[a-z0-9\-]+\.([a-z0-9\-]+\.)*+[a-z]{2}/is', $email)) {
+	// if (!preg_match('/^[a-z0-9&\'\.\-_\+]+@[a-z0-9\-]+\.([a-z0-9\-]+\.)*+[a-z]{2}/is', $email)) {
+	if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		$error['email'] = "Please enter a valid email address.";
 	}
 	// Check Message
@@ -29,7 +30,7 @@ if($_POST) {
 
    // Set Message
    $message .= "Email from: " . $name . "<br />";
-	$message .= "Email address: " . $email . "<br />";
+   $message .= "Email address: " . $email . "<br />";
    $message .= "Message: <br />";
    $message .= $contact_message;
    $message .= "<br /> ----- <br /> This email was sent from your site's contact form. <br />";
@@ -47,22 +48,25 @@ if($_POST) {
    if (!$error) {
 
       ini_set("sendmail_from", $siteOwnersEmail); // for windows server
-      $mail = mail($siteOwnersEmail, $subject, $message, $headers);
+      $mail = mail($siteOwnersEmail, $subject, $message);
 
-		if ($mail) { echo "OK"; }
+	  if ($mail) { echo "OK"; }
       else { echo "Something went wrong. Please try again."; }
 		
 	} # end if - no validation error
 
 	else {
-
-		$response = (isset($error['name'])) ? $error['name'] . "<br /> \n" : null;
-		$response .= (isset($error['email'])) ? $error['email'] . "<br /> \n" : null;
-		$response .= (isset($error['message'])) ? $error['message'] . "<br />" : null;
-		
-		echo $response;
-
-	} # end if - there was a validation error
+		$response = [
+			'error' => true,
+			'messages' => [
+				'name' => isset($error['name']) ? $error['name'] : '',
+				'email' => isset($error['email']) ? $error['email'] : '',
+				'message' => isset($error['message']) ? $error['message'] : '',
+			],
+		];
+		echo json_encode($response);
+	}
+	
 
 }
 
