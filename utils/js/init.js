@@ -155,22 +155,42 @@
 	      url: "https://formspree.io/f/meqbrbog",
 	      data: data,
          crossDomain: true,
-         dataType: JSON,
-	      success: function(msg) {
+         dataType: "json", // Corrected to specify JSON as the expected response type
+         success: function(response) {
+         // Log the response to the console
 
-            // Message was sent
-            if (msg == 'OK') {
+         // You can also check specific properties of the response if it's structured
+         if (response['ok'] == true) {
+               // Handle success here
                $('#image-loader').fadeOut();
                $('#message-warning').hide();
                $('#contactForm').fadeOut();
-               $('#message-success').fadeIn();   
-            }
+               $('#message-success').fadeIn();
+         } else {
+               // Handle errors here
+               $('#message-warning').html(response.error);
+               $('#message-warning').fadeIn();
+         }
+      
+         // dataType: JSON,
+	      // success: function(msg) {
+
+         //    // Message was sent
+         //    console.log(msg)
+            // if (msg) {
+            //    alert("Message sent"); 
+               // $('#image-loader').fadeOut();
+               // $('#message-warning').hide();
+               // $('#contactForm').fadeOut();
+               // $('#message-success').fadeIn(); 
+                
+            // }
             // There was an error
-            else {
-               $('#image-loader').fadeOut();
-               $('#message-warning').html(msg);
-	            $('#message-warning').fadeIn();
-            }
+            // else {
+            //    $('#image-loader').fadeOut();
+            //    $('#message-warning').html(msg);
+	         //    $('#message-warning').fadeIn();
+            // }
 
 	      }
 
