@@ -152,8 +152,10 @@
       $.ajax({
 
 	      type: "POST",
-	      url: "http://formspree.io/sirpavr18@gmail.com",
+	      url: "https://formspree.io/f/meqbrbog",
 	      data: data,
+         crossDomain: true,
+         dataType: JSON,
 	      success: function(msg) {
 
             // Message was sent
